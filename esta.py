@@ -1,4 +1,8 @@
 import math
+import random
+from bokeh.models.annotations import ColorBar
+from bokeh.plotting import graph, output_file,figure,show
+
 
 def sort_for_min_distance(data_set,historial):
     data_set1 = data_set ; distances = [] ; keys = []; new_Data_Set = []
@@ -73,33 +77,76 @@ def sort_for_min_distance(data_set,historial):
 
 data = [(2,3),(3,6),(8,7),(9,1)]
 merge_and_historial = sort_for_min_distance(data,[])
+print(merge_and_historial)
 
 
 
 
+def random_color_generator():
+    data = []; return_data = []
+    with open("./colors.txt","r", encoding="utf-8") as f:
+        
+        for x in f:
+            data.append(str(x))
+        
+        for clean in data:
+            return_data.append(clean[0:-1])
+   
+    color = return_data[random.randint(0,len(return_data))]
+    return color[1::]
 
-def link_progress(historial):
+def link_progress(historial,random_color_generator):
+
+    output_file('Cluster.html')
+    graph = figure()
+    
     coordenades = [] 
-    axis_x = [] ; axis_y = []   
-    points_linked = False ; i = 0
+    axis_x = [] ; axis_y = []  ; complete_set_x = []; complete_set_y = []
+    points_linked = False ; i = 0 ; points_ = False ; e = 0; size = 10
     while points_linked == False:
         try:
             link =  (historial[i], historial[i+1])  
             coordenades.append(link)
+            x1 = link[0][0] ; x2 = link[1][0] 
+            y1 = link[0][1] ; y2 = link[1][1]
+            axis_x.append(x1); axis_x.append(x2)
+            axis_y.append(y1);axis_y.append(y2)
+            _color = random_color_generator()
+            graph.line(axis_x,axis_y, color = _color,width = 2)
+            graph.circle(axis_x,axis_y, color = _color , size = 20)
+            axis_x = []; axis_y = []
+            _color = random_color_generator()
             i += 2
         except IndexError:
             points_linked = True
     
-    for coordenade in coordenades:
-        x1 = coordenade[0][0]
-        x2 = coordenade
+    # while points_ == False:
+    #     try:
+    #         circle = historial[e]
+    #         a = 1
+    #         x1 = circle[0] ; y1 = circle[1]
+    #         complete_set_x.append(x1)
+    #         complete_set_y.append(y1)
+            
+    #         graph.circle(complete_set_x,complete_set_y, color = "black",  size = size, alpha = 0.5)
+    #         complete_set_y = []; complete_set_x = []
+    #         e += 1 ; size += 5
+    #         print(size)
+    #     except IndexError:
+    #         points_ = True
+    
+
+    show(graph)
+    # for coordenade in coordenades:
+    #     x1 = coordenade[0][0]
+    #     x2 = coordenade
 
 
 
  
 
-a = link_progress(merge_and_historial[1])
-print(a)
+a = link_progress(merge_and_historial[1],random_color_generator)
+# print(a)
 
 # writte_into_txt(a)
 # [(5, 4), (8, 4), (0, 8), (1, 4), (9, 6), (8, 7), (9, 2), (6, 10), (10, 2), (6, 9)]
