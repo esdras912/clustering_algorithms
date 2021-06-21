@@ -79,7 +79,14 @@ def sort_for_min_distance(data_set,historial):
 
 
 
-data = [(2,3),(3,6),(8,7),(9,1)]
+def generate_data_set(n,limit):
+    x_coordenates = [random.randint(0,limit) for x in range(n)] 
+    y_coordenates = [random.randint(0,limit) for y in range(n)]
+
+    linked_coordenates = [(x,y) for x,y in zip(x_coordenates,y_coordenates)]
+    return x_coordenates,y_coordenates,linked_coordenates
+data = generate_data_set(16 ,20)[2]
+# data = [(5, 4), (8, 4), (0, 8), (1, 4), (9, 6), (8, 7), (9, 2), (6, 10), (10, 2), (6, 9)]   
 merge_and_historial = sort_for_min_distance(data,[])
 print(merge_and_historial)
 
