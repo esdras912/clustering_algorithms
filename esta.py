@@ -2,6 +2,10 @@ import math
 import random
 from bokeh.models.annotations import ColorBar
 from bokeh.plotting import graph, output_file,figure,show
+from bokeh.models import ColumnDataSource, Label, LabelSet, Range1d
+from bokeh.themes import built_in_themes
+from bokeh.io import curdoc
+
 
 
 def sort_for_min_distance(data_set,historial):
@@ -95,57 +99,68 @@ def random_color_generator():
     color = return_data[random.randint(0,len(return_data))]
     return color[1::]
 
-def link_progress(historial,random_color_generator):
+def link_progress(historial,random_color_generator,last_circle):
 
     output_file('Cluster.html')
+    curdoc().theme = 'dark_minimal'
     graph = figure()
     
     coordenades = [] 
     axis_x = [] ; axis_y = []  ; complete_set_x = []; complete_set_y = []
-    points_linked = False ; i = 0 ; points_ = False ; e = 0; size = 10
+    data = dict(x = [], y= [], iteration = []) 
+    source = ColumnDataSource(data)
+
+    points_linked = False ; i = 0 ; points_ = False ; e = 1; size = 10
     while points_linked == False:
         try:
             link =  (historial[i], historial[i+1])  
             coordenades.append(link)
+
+
             x1 = link[0][0] ; x2 = link[1][0] 
             y1 = link[0][1] ; y2 = link[1][1]
             axis_x.append(x1); axis_x.append(x2)
             axis_y.append(y1);axis_y.append(y2)
+
+            data['x'] = [x1,x2]
+            data['y'] = [y1,y2] 
+            data['iteration'] = [str(e),str(e)]
+            source = ColumnDataSource(data)
+
             _color = random_color_generator()
-            graph.line(axis_x,axis_y, color = _color,width = 2)
-            graph.circle(axis_x,axis_y, color = _color , size = 20)
-            axis_x = []; axis_y = []
-            _color = random_color_generator()
-            i += 2
+            graph.line(x = 'x', y = 'y', color = _color,width = 2, source = source, alpha = 0.5)
+            graph.circle(x = 'x', y = 'y', color = _color , size = 15 , source = source)
+
+            labels = LabelSet(x = 'x', y = 'y', text = 'iteration' ,x_offset=5, y_offset=5, source = source,text_color = "White",
+            render_mode = 'canvas')
+            graph.add_layout(labels)
+
+            axis_x = []; axis_y = [] ; i += 2; e += 1
+
+
         except IndexError:
             points_linked = True
-    
-    # while points_ == False:
-    #     try:
-    #         circle = historial[e]
-    #         a = 1
-    #         x1 = circle[0] ; y1 = circle[1]
-    #         complete_set_x.append(x1)
-    #         complete_set_y.append(y1)
             
-    #         graph.circle(complete_set_x,complete_set_y, color = "black",  size = size, alpha = 0.5)
-    #         complete_set_y = []; complete_set_x = []
-    #         e += 1 ; size += 5
-    #         print(size)
-    #     except IndexError:
-    #         points_ = True
+            # graph.circle(x = 'x', y = 'y', color = _color , size = 20 , source = source)
     
+    last_coordenades = last_circle[0]
+    data['x'] = [last_coordenades[0]]
+    data['y'] = [last_coordenades[1]] 
+    data["iteration"] = [f"Final Group ({e})"]
+    source = ColumnDataSource(data)
+    last_color = random_color_generator()
+    graph.circle(x = 'x', y = 'y', color = last_color , size = 60 , source = source, alpha = 0.5)
+    last_labels = LabelSet(x = 'x', y = 'y', text = 'iteration' ,x_offset=10, y_offset=10, source = source,text_color = "White",
+    render_mode = 'canvas')
+    graph.add_layout(last_labels)
+
 
     show(graph)
-    # for coordenade in coordenades:
-    #     x1 = coordenade[0][0]
-    #     x2 = coordenade
-
-
+   
 
  
 
-a = link_progress(merge_and_historial[1],random_color_generator)
+link_progress(merge_and_historial[1],random_color_generator,merge_and_historial[0])
 # print(a)
 
 # writte_into_txt(a)
