@@ -8,7 +8,7 @@ from bokeh.plotting import graph, output_file,figure,show
 from bokeh.models import ColumnDataSource, Label, LabelSet, Range1d, sources
 from bokeh.themes import built_in_themes
 from bokeh.io import curdoc
-from jinja2.filters import K
+from jinja2.filters import F, K
 from jinja2.nodes import With
 
 
@@ -46,8 +46,10 @@ data = generate_data_set_and_k_point(5,5,2)
 
 
 def compare_k(k_points,points):
-    distances = []; idk = 0; idp = 0; k_sets = {}
-    distances_full = []
+    distances = []; idk = 0; idp = 0; k_sets = {} ;distances_full = []
+    clustering_finished = False; k_limit = len(k_points) -1; p_limit = len(points)-1
+    cluster_iter_k = 0; cluster_iter_p = 
+
     for k_point in k_points:
         Kx = k_point[0]; Ky = k_point[1]; idp = 0
         k_sets[str(idk)] = []
@@ -56,13 +58,19 @@ def compare_k(k_points,points):
             Px = point[0]; Py = point[1]
             distance = round(math.sqrt((Kx - Px)**2 + (Ky - Py)**2),2)
             # distances.append(((idk,idp),distance)) ;idp += 1
-            k_sets[str(idk)].append((distance))
+            k_sets[str(idk)].append(((idp),(distance)))
             distances_full.append(distance)
-        idk += 1
+            idp +=1 
+        idk +=1
+    print(k_sets)
+    
 
-    comparation_finished = False; n_points = len(points); i_points = 0; cache = {}; cache[str(i_points)] = []
+    # while clustering_finished == False:
 
-   
+
+
+
+    
 
     
 
@@ -82,6 +90,6 @@ k_y = [3,5]
 x_y = [(2,4),(2,0),(1,4),(3,2),(2,2)]
 kx_ky = [(3,3),(2,5),(1,3)]
 data = [x,y,x_y,k_x,k_y,kx_ky]
-graph(data)
+# graph(data)
 
 compare_k(kx_ky,x_y)
