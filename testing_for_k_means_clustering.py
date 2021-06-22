@@ -69,15 +69,19 @@ def compare_k(k_points,points):
         k_point_clustered[str(key_generator)] = []
 
     print(k_point_clustered)
+    comparing = cache['cache']
 
     while clustering_finished == False:
 
         if len(cache['cache']) == k_limit:
             cluster_iter_p +=1 ; cluster_iter_k = 0
-            comparing = list(cache.values())
-            k_point_clustered[str(comparing.index(min(comparing)))] = comparing[comparing.index(min(comparing))]
-            comparing[comparing.index(min(comparing))] = comparing[comparing.index(min(comparing))] **[comparing[comparing.index(max(comparing))]]
-            a =1
+            
+            k_point_clustered[str(comparing.index(min(comparing)))].append((comparing.index(min(comparing)),comparing[comparing.index(min(comparing))]))
+            
+            comare = comparing[comparing.index(min(comparing))]
+            comare2 = comparing[comparing.index(max(comparing))]
+            key = str(comparing.index(min(comparing)))
+            
         else:
             cache['cache'].append(k_sets[str(cluster_iter_k)][cluster_iter_p])
             cluster_iter_k +=1 ; 
