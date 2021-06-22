@@ -62,10 +62,7 @@ def compare_k(k_points,points):
 
     comparation_finished = False; n_points = len(points); i_points = 0; cache = {}; cache[str(i_points)] = []
 
-    while comparation_finished == False:
-       
-        pass
-
+   
 
     
 
