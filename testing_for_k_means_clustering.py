@@ -47,8 +47,8 @@ data = generate_data_set_and_k_point(5,5,2)
 
 def compare_k(k_points,points):
     distances = []; idk = 0; idp = 0; k_sets = {} ;distances_full = []
-    clustering_finished = False; k_limit = len(k_points) -1; p_limit = len(points)-1
-    cluster_iter_k = 0; cluster_iter_p = 
+    clustering_finished = False; k_limit = len(k_points); p_limit = len(points)
+    cluster_iter_k = 0; cluster_iter_p = 0; k_groups = {}
 
     for k_point in k_points:
         Kx = k_point[0]; Ky = k_point[1]; idp = 0
@@ -58,14 +58,32 @@ def compare_k(k_points,points):
             Px = point[0]; Py = point[1]
             distance = round(math.sqrt((Kx - Px)**2 + (Ky - Py)**2),2)
             # distances.append(((idk,idp),distance)) ;idp += 1
-            k_sets[str(idk)].append(((idp),(distance)))
+            k_sets[str(idk)].append(distance)
             distances_full.append(distance)
             idp +=1 
         idk +=1
     print(k_sets)
     
+    cache = dict(cache = []); points_clustered = []; k_point_clustered = {}; comparing = []; _cache = []
+    for key_generator in range(0,len(k_points)):
+        k_point_clustered[str(key_generator)] = []
 
-    # while clustering_finished == False:
+    print(k_point_clustered)
+
+    while clustering_finished == False:
+
+        if len(cache['cache']) == k_limit:
+            cluster_iter_p +=1 ; cluster_iter_k = 0
+            comparing = list(cache.values())
+            k_point_clustered[str(comparing.index(min(comparing)))] = comparing[comparing.index(min(comparing))]
+            comparing[comparing.index(min(comparing))] = comparing[comparing.index(min(comparing))] **[comparing[comparing.index(max(comparing))]]
+            a =1
+        else:
+            cache['cache'].append(k_sets[str(cluster_iter_k)][cluster_iter_p])
+            cluster_iter_k +=1 ; 
+    
+        
+
 
 
 
