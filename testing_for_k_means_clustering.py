@@ -1,6 +1,7 @@
 
 import math
 import random
+from sys import gettrace
 from bokeh.core.property.numeric import Size
 from bokeh.layouts import column
 from bokeh.models.annotations import ColorBar
@@ -98,9 +99,21 @@ def compare_k(k_points,points):
     
         
     
-    print(k_point_clustered)
-    print(k_sets)
+    min_max_points = {}
+    for k_point_key_generor in range(len(k_point_clustered)):
+        min_max_points[str(k_point_key_generor)] = []
 
+
+
+    getted_min_max_vals = False ; k_iter_cluster = 0; P_iter_cluster = 0
+    while getted_min_max_vals == False:
+
+        if len(k_point_clustered[str(k_iter_cluster)]) == P_iter_cluster:
+            k_iter_cluster += 1
+        
+        val = k_point_clustered[str(k_iter_cluster)][P_iter_cluster][1] 
+        min_max_points[str(k_iter_cluster)].append(val)
+        P_iter_cluster += 1
 
 
     
@@ -117,11 +130,11 @@ def compare_k(k_points,points):
 x = [2,2,1,3,2]
 y = [4,0,4,2,2]
 
-k_x = [3,2,]
+k_x = [3,2]
 k_y = [3,5]
 
 x_y = [(2,4),(2,0),(1,4),(3,2),(2,2)]
-kx_ky = [(3,3),(2,5),(1,3)]
+kx_ky = [(3,3),(2,5)]
 data = [x,y,x_y,k_x,k_y,kx_ky]
 # graph(data)
 
