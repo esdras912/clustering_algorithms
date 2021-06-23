@@ -121,16 +121,25 @@ def compare_k(k_points,points):
             min_max_points[str(k_iter_cluster)].append((min_val_cluster_k,key_min_val_cluster_k))
             min_max_points[str(k_iter_cluster)].append((max_val_cluster_k,key_max_val_cluster_k))
             
+            
 
             if k_iter_cluster < len(k_point_clustered):
-                k_iter_cluster += 1
+                k_iter_cluster += 1; P_iter_cluster = 0
             
             if k_iter_cluster == len(k_point_clustered):
+                P_iter_cluster = 0; k_iter_cluster = 0
                 getted_min_max_vals = True
+                break
         
         val = k_point_clustered[str(k_iter_cluster)][P_iter_cluster][1] 
         min_max_points[str(k_iter_cluster)].append(val)
         P_iter_cluster += 1
+
+       
+
+
+
+    a = 1
 
 
     
