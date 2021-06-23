@@ -1,5 +1,6 @@
 
 import math
+from operator import index
 import random
 from sys import gettrace
 from bokeh.core.property.numeric import Size
@@ -109,6 +110,18 @@ def compare_k(k_points,points):
     while getted_min_max_vals == False:
 
         if len(k_point_clustered[str(k_iter_cluster)]) == P_iter_cluster:
+
+            min_val_cluster_k =  min(min_max_points[str(k_iter_cluster)])
+            key_min_val_cluster_k = min_max_points[str(k_iter_cluster)].index(min_val_cluster_k)
+
+            max_val_cluster_k =  max(min_max_points[str(k_iter_cluster)])
+            key_max_val_cluster_k = min_max_points[str(k_iter_cluster)].index(max_val_cluster_k)
+
+            min_max_points[str(k_iter_cluster)] = []
+            min_max_points[str(k_iter_cluster)].append((min_val_cluster_k,key_min_val_cluster_k))
+            min_max_points[str(k_iter_cluster)].append((max_val_cluster_k,key_max_val_cluster_k))
+            
+
             k_iter_cluster += 1
         
         val = k_point_clustered[str(k_iter_cluster)][P_iter_cluster][1] 
