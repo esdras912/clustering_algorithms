@@ -19,9 +19,9 @@ def generate_data_set_and_k_point(n,limit,k):
     linked_coordenates = [(x,y) for x,y in zip(x_coordenates,y_coordenates)]
 
     k_x_random = [random.randint(0,limit) for x in range(k)]
-    print(k_x_random)
+    
     k_y_random = [random.randint(0,limit) for y in range(k)]
-    print(k_y_random)
+  
     linked_coordenates_k = [(x,y) for x,y in zip(k_x_random,k_y_random)]
 
     return x_coordenates,y_coordenates,linked_coordenates,k_x_random,k_y_random, linked_coordenates_k
@@ -62,13 +62,13 @@ def compare_k(k_points,points):
             distances_full.append(distance)
             idp +=1 
         idk +=1
-    print(k_sets)
+    
     
     cache = dict(cache = []);  k_point_clustered = {}; comparing = []; _cache_save = []
     for key_generator in range(0,len(k_points)):
         k_point_clustered[str(key_generator)] = []
 
-    print(k_point_clustered)
+    
     
 
     while clustering_finished == False:
@@ -97,8 +97,9 @@ def compare_k(k_points,points):
             cluster_iter_k +=1 ; 
     
         
-
-
+    
+    print(k_point_clustered)
+    print(k_sets)
 
 
 
@@ -125,3 +126,4 @@ data = [x,y,x_y,k_x,k_y,kx_ky]
 # graph(data)
 
 compare_k(kx_ky,x_y)
+print(x_y)
