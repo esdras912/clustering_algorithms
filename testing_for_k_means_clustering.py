@@ -2,6 +2,7 @@
 import math
 from operator import index
 import random
+import re
 from sys import gettrace
 from bokeh.core.property.numeric import Size
 from bokeh.layouts import column
@@ -28,6 +29,15 @@ def generate_data_set_and_k_point(n,limit,k):
 
     return x_coordenates,y_coordenates,linked_coordenates,k_x_random,k_y_random, linked_coordenates_k
 
+def extract_data_points_for_graph(data):
+    x_axis = []; y_axis = []
+    for coordenade in data:
+        x_axis.append(coordenade[0])
+        y_axis.append(coordenade[1])
+
+    return x_axis,y_axis
+
+
 
 def graph(data_set):
     output_file('K_means.html')
@@ -44,8 +54,7 @@ def graph(data_set):
 
     show(graph)
 
-data = generate_data_set_and_k_point(5,5,2)
-
+# data = generate_data_set_and_k_point(5,5,2
 
 def compare_k(k_points,points):
     distances = []; idk = 0; idp = 0; k_sets = {} ;distances_full = []
@@ -100,7 +109,7 @@ def compare_k(k_points,points):
     
         
     
-    min_max_points = {}
+    min_max_points = {}; radius_for_new_k_points = []
     for k_point_key_generor in range(len(k_point_clustered)):
         min_max_points[str(k_point_key_generor)] = []
 
@@ -117,12 +126,25 @@ def compare_k(k_points,points):
             max_val_cluster_k =  max(min_max_points[str(k_iter_cluster)])
             key_max_val_cluster_k = min_max_points[str(k_iter_cluster)].index(max_val_cluster_k)
 
-            min_max_points[str(k_iter_cluster)] = []
-            min_max_points[str(k_iter_cluster)].append((min_val_cluster_k,key_min_val_cluster_k))
-            min_max_points[str(k_iter_cluster)].append((max_val_cluster_k,key_max_val_cluster_k))
-            
             
 
+            key_min_for_coordenades = k_point_clustered[str(k_iter_cluster)][key_min_val][0]
+            key_max_for_coordenades = k_point_clustered[str(k_iter_cluster)][key_max_val][0]
+
+            min_point = points[key_min_for_coordenades]; max_point = points[key_max_for_coordenades]
+            x_min = min_point[0]; y_min = min_point[1]
+            x_max = max_point[0]; y_max = max_point[1]
+            mean_x = (x_min + x_max) / 2;  mean_y = (y_min + y_max) / 2
+            distance = math.sqrt((x_max -x_min)**2 + (y_max - y_min)**2)
+            radius_graph = (distance / 2)
+            new_k_point = (mean_x,mean_y)
+            radius_for_new_k_points.append(radius_graph)
+
+            min_max_points[str(k_iter_cluster)] = 0
+            # min_max_points[str(k_iter_cluster)].append((min_val_cluster_k,key_min_val_cluster_k))
+            # min_max_points[str(k_iter_cluster)].append((max_val_cluster_k,key_max_val_cluster_k))
+            min_max_points[str(k_iter_cluster)] = new_k_point
+            
             if k_iter_cluster < len(k_point_clustered):
                 k_iter_cluster += 1; P_iter_cluster = 0
             
@@ -136,33 +158,27 @@ def compare_k(k_points,points):
         P_iter_cluster += 1
 
        
+    new_k_points = list(min_max_points.values())
 
 
-
-    a = 1
+    return new_k_points,radius_for_new_k_points
 
 
     
 
     
+x = [2,2,1,3,2] ; y = [4,0,4,2,2]
 
-        
-        
-
-           
-
-
-
-x = [2,2,1,3,2]
-y = [4,0,4,2,2]
-
-k_x = [3,2]
-k_y = [3,5]
+k_x = [3,2] ; k_y = [3,5]
 
 x_y = [(2,4),(2,0),(1,4),(3,2),(2,2)]
-kx_ky = [(3,3),(2,5)]
-data = [x,y,x_y,k_x,k_y,kx_ky]
-# graph(data)
 
-compare_k(kx_ky,x_y)
-print(x_y)
+kx_ky = [(3,3),(2,5)]
+
+data = [x,y,x_y,k_x,k_y,kx_ky]
+graph(data)
+graph
+new_k_points = compare_k(kx_ky,x_y)
+points_to_graph = extract_data_points_for_graph(new_k_points)
+
+new_data = [x,y,x_y,points_to_graph[0],points_to_graph[1],new_k_points]
