@@ -65,13 +65,16 @@ def graph_2(data_set):
     source_k = ColumnDataSource(k_data)
 
     graph.circle(x = 'x', y = 'y', size = 10, color = "Blue", source = source)
-    graph.circle(x = 'x', y = 'y', radius = 0.4, color = "Red",alpha = 0.5, source = source_k)
+    graph.circle(x = 'x', y = 'y', radius = 0.5, color = "Red",alpha = 0.5, source = source_k)
 
     show(graph)
 
 
-def compare_k(k_points,points):
-    distances = []; idk = 0; idp = 0; k_sets = {} ;distances_full = []
+def compare_k(k_points,points,stop_counter = 0):
+
+    
+
+    idk = 0; idp = 0; k_sets = {} ;distances_full = [];stop_counter_in = stop_counter
     clustering_finished = False; k_limit = len(k_points); p_limit = len(points)
     cluster_iter_k = 0; cluster_iter_p = 0; k_groups = {}
 
@@ -142,8 +145,8 @@ def compare_k(k_points,points):
 
             
 
-            key_min_for_coordenades = k_point_clustered[str(k_iter_cluster)][key_min_val][0]
-            key_max_for_coordenades = k_point_clustered[str(k_iter_cluster)][key_max_val][0]
+            key_min_for_coordenades = k_point_clustered[str(k_iter_cluster)][key_min_val_cluster_k][0]
+            key_max_for_coordenades = k_point_clustered[str(k_iter_cluster)][key_max_val_cluster_k][0]
 
             min_point = points[key_min_for_coordenades]; max_point = points[key_max_for_coordenades]
             x_min = min_point[0]; y_min = min_point[1]
@@ -174,24 +177,37 @@ def compare_k(k_points,points):
        
     new_k_points = list(min_max_points.values())
 
+    if k_points == new_k_points:
+        stop_counter_in += 1
+        stop_counter = stop_counter_in
 
     return new_k_points,radius_for_new_k_points
-
 
     
 
     
 x = [2,2,1,3,2] ; y = [4,0,4,2,2]
-
 k_x = [3,2] ; k_y = [3,5]
-
 x_y = [(2,4),(2,0),(1,4),(3,2),(2,2)]
-
 kx_ky = [(3,3),(2,5)]
-
 data = [x,y,x_y,k_x,k_y,kx_ky]
 
-new_k_points = compare_k(kx_ky,x_y)
+
+
+
+repetead_points = 0 ; last_points = [[]]
+new_k_points = []
+while repetead_points <= 3:
+    new_k_points = compare_k(kx_ky,x_y)
+    new_k_x_y = new_k_points[0]
+    if new_k_points[0] == last_points[0]:
+        repetead_points += 1
+
+    last_points = []
+    last_points.append(new_k_points[0])
+
+
+
 points_to_graph = extract_data_points_for_graph(new_k_points[0])
 
 new_data = [x,y,x_y,points_to_graph[0],points_to_graph[1],new_k_points]
@@ -207,31 +223,84 @@ if next == "Y" or next == "y":
 
 
 
-new_x = [1, 1, 1, 1.5, 2, 2, 2, 2.5, 3, 3, 3.5, 3.5, 4, 4, 6, 6.5, 6.5, 7.5, 7.5, 8, 8, 8.5, 9]
-new_y = [1, 2, 3, 7.5, 2, 4, 6.5, 3, 2, 8, 1, 10, 3, 6.5, 6, 1.5, 8, 2, 3, 6.5, 9, 2.5, 1]
 
 
-new_x_y = [(1,1),(1,2),(1,3),
-      (1.5,7.5),
-      (2,2),(2,4),(2,6.5),
-      (2.5,3),
-      (3,2),(3,8),
-      (3.5,1),(3.5,10),
-      (4,3),(4,6.5),
-      (6,6),
-      (6.5,1.5),(6.5,8),
-      (7.5,2),(7.5,3),
-      (8,6.5),(8,9),
-      (8.5,2.5),
-      (9,1)]
 
 
-new_k_x_y = [(2,1),(5,9),(10,3)]
 
-new_k_x = [2, 5, 10]
-new_k_y = [1, 9, 3]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# new_x = [1, 1, 1, 1.5, 2, 2, 2, 2.5, 3, 3, 3.5, 3.5, 4, 4, 6, 6.5, 6.5, 7.5, 7.5, 8, 8, 8.5, 9]
+# new_y = [1, 2, 3, 7.5, 2, 4, 6.5, 3, 2, 8, 1, 10, 3, 6.5, 6, 1.5, 8, 2, 3, 6.5, 9, 2.5, 1]
+
+
+# new_x_y = [(1,1),(1,2),(1,3),
+#       (1.5,7.5),
+#       (2,2),(2,4),(2,6.5),
+#       (2.5,3),
+#       (3,2),(3,8),
+#       (3.5,1),(3.5,10),
+#       (4,3),(4,6.5),
+#       (6,6),
+#       (6.5,1.5),(6.5,8),
+#       (7.5,2),(7.5,3),
+#       (8,6.5),(8,9),
+#       (8.5,2.5),
+#       (9,1)]
+
+
+# new_k_x_y = [(2,1),(5,9),(10,3)]
+
+# new_k_x = [2, 5, 10]
+# new_k_y = [1, 9, 3]
+
+
 
 
 # aa_data = [new_x,new_y,new_x_y,new_k_x,new_k_y,new_k_x_y]
 
+
+
+# repetead_points = 0 ; last_points = [[]]
+# while repetead_points <= 3:
+#     new_k_points = compare_k(new_k_x_y,new_x_y)
+#     new_k_x_y = new_k_points[0]
+#     if new_k_points[0] == last_points[0]:
+#         repetead_points += 1
+
+#     last_points = []
+#     last_points.append(new_k_points[0])
+
+
+
+
+# points_to_graph = extract_data_points_for_graph(new_k_points[0])
+
+# new_data = [new_x,new_y,new_x_y,points_to_graph[0],points_to_graph[1],new_k_points]
+
 # graph(aa_data)
+# next = input("Next: ")
+# if next == "Y" or next == "y":
+#     graph_2(new_data)
+
+
+
+
+# # graph(aa_data)
