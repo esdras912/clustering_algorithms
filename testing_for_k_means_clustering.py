@@ -218,7 +218,7 @@ graph(data)
 next = input("Next: ")
 if next == "Y" or next == "y":
     graph_2(new_data)
-    graph(data)
+
 
 
 
