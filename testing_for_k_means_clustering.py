@@ -11,8 +11,9 @@ from bokeh.plotting import graph, output_file,figure,show
 from bokeh.models import ColumnDataSource, Label, LabelSet, Range1d, sources
 from bokeh.themes import built_in_themes
 from bokeh.io import curdoc
-from jinja2.filters import F, K
-from jinja2.nodes import With
+
+
+
 
 
 def generate_data_set_and_k_point(n,limit,k):
@@ -111,7 +112,9 @@ def compare_k(k_points,points,stop_counter = 0):
             min_value = comparing[comparing.index(min(comparing))]
             key_min_val = comparing.index(min(comparing))
             key_max_val = comparing.index(max(comparing))
-            k_point_clustered[str(comparing.index(min(comparing)))].append((cluster_iter_p,comparing[comparing.index(min(comparing))]))
+            # k_point_clustered[str(comparing.index(min(comparing)))].append((cluster_iter_p,comparing[comparing.index(min(comparing))]))
+            k_point_clustered[str(comparing.index(min(comparing)))].append(cluster_iter_p)
+
             comparing[key_min_val] = comparing[key_max_val] + 1
 
             if comparing[comparing.index(min(comparing))] != min_value:
@@ -135,42 +138,41 @@ def compare_k(k_points,points,stop_counter = 0):
     getted_min_max_vals = False ; k_iter_cluster = 0; P_iter_cluster = 0
     while getted_min_max_vals == False:
 
-        if len(k_point_clustered[str(k_iter_cluster)]) == P_iter_cluster:
+        # if len(k_point_clustered[str(k_iter_cluster)]) == P_iter_cluster:
 
-            min_val_cluster_k =  min(min_max_points[str(k_iter_cluster)])
-            key_min_val_cluster_k = min_max_points[str(k_iter_cluster)].index(min_val_cluster_k)
+        #     min_val_cluster_k =  min(min_max_points[str(k_iter_cluster)])
+        #     key_min_val_cluster_k = min_max_points[str(k_iter_cluster)].index(min_val_cluster_k)
 
-            max_val_cluster_k =  max(min_max_points[str(k_iter_cluster)])
-            key_max_val_cluster_k = min_max_points[str(k_iter_cluster)].index(max_val_cluster_k)
+        #     max_val_cluster_k =  max(min_max_points[str(k_iter_cluster)])
+        #     key_max_val_cluster_k = min_max_points[str(k_iter_cluster)].index(max_val_cluster_k)
 
+        #     key_min_for_coordenades = k_point_clustered[str(k_iter_cluster)][key_min_val_cluster_k][0]
+        #     key_max_for_coordenades = k_point_clustered[str(k_iter_cluster)][key_max_val_cluster_k][0]
+
+        #     min_point = points[key_min_for_coordenades]; max_point = points[key_max_for_coordenades]
+        #     x_min = min_point[0]; y_min = min_point[1]
+        #     x_max = max_point[0]; y_max = max_point[1]
+        #     mean_x = (x_min + x_max) / 2;  mean_y = (y_min + y_max) / 2
+        #     distance = math.sqrt((x_max -x_min)**2 + (y_max - y_min)**2)
+        #     radius_graph = (distance / 2)
+        #     new_k_point = (mean_x,mean_y)
+        #     radius_for_new_k_points.append(radius_graph)
+
+        #     min_max_points[str(k_iter_cluster)] = 0
+        #     # min_max_points[str(k_iter_cluster)].append((min_val_cluster_k,key_min_val_cluster_k))
+        #     # min_max_points[str(k_iter_cluster)].append((max_val_cluster_k,key_max_val_cluster_k))
+        #     min_max_points[str(k_iter_cluster)] = new_k_point
             
-
-            key_min_for_coordenades = k_point_clustered[str(k_iter_cluster)][key_min_val_cluster_k][0]
-            key_max_for_coordenades = k_point_clustered[str(k_iter_cluster)][key_max_val_cluster_k][0]
-
-            min_point = points[key_min_for_coordenades]; max_point = points[key_max_for_coordenades]
-            x_min = min_point[0]; y_min = min_point[1]
-            x_max = max_point[0]; y_max = max_point[1]
-            mean_x = (x_min + x_max) / 2;  mean_y = (y_min + y_max) / 2
-            distance = math.sqrt((x_max -x_min)**2 + (y_max - y_min)**2)
-            radius_graph = (distance / 2)
-            new_k_point = (mean_x,mean_y)
-            radius_for_new_k_points.append(radius_graph)
-
-            min_max_points[str(k_iter_cluster)] = 0
-            # min_max_points[str(k_iter_cluster)].append((min_val_cluster_k,key_min_val_cluster_k))
-            # min_max_points[str(k_iter_cluster)].append((max_val_cluster_k,key_max_val_cluster_k))
-            min_max_points[str(k_iter_cluster)] = new_k_point
+        #     if k_iter_cluster < len(k_point_clustered):
+        #         k_iter_cluster += 1; P_iter_cluster = 0
             
-            if k_iter_cluster < len(k_point_clustered):
-                k_iter_cluster += 1; P_iter_cluster = 0
-            
-            if k_iter_cluster == len(k_point_clustered):
-                P_iter_cluster = 0; k_iter_cluster = 0
-                getted_min_max_vals = True
-                break
+        #     if k_iter_cluster == len(k_point_clustered):
+        #         P_iter_cluster = 0; k_iter_cluster = 0
+        #         getted_min_max_vals = True
+        #         break
         
-        val = k_point_clustered[str(k_iter_cluster)][P_iter_cluster][1] 
+        # val = k_point_clustered[str(k_iter_cluster)][P_iter_cluster][1]  in case of need access to distance at k point clustered l115
+        val = k_point_clustered[str(k_iter_cluster)][P_iter_cluster]
         min_max_points[str(k_iter_cluster)].append(val)
         P_iter_cluster += 1
 
