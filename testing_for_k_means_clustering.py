@@ -28,7 +28,7 @@ def generate_data_set_and_k_point(n,limit,k):
   
     linked_coordenates_k = [(x,y) for x,y in zip(k_x_random,k_y_random)]
 
-    return x_coordenates,y_coordenates,linked_coordenates,k_x_random,k_y_random, linked_coordenates_k
+    return k_x_random,k_y_random, linked_coordenates_k
 
 def extract_data_points_for_graph(data):
     x_axis = []; y_axis = []
@@ -225,35 +225,38 @@ def compare_k(k_points,points,ready_to_graph):
 
     return new_k_points,radius_for_new_k_points
 
-    
-
-    
-x = [1,2,3,4,5,7,8,8] ; y = [1,2,2,7,8,5,6,9]
-k_x = [2,4,10] ; k_y = [4,9,4]
-
-
-x_y = [(1,1),(2,2),(3,2),(4,7),(5,8),(7,5),(8,6),(8,9),(5,9),(8,5),(11,2),(4,8),(2,6)]
-kx_ky = [(2,4),(4,9),(10,4)]
-data = [x,y,x_y,k_x,k_y,kx_ky]
 
 
 
+# graph(data)
+for _ in range(10):
+        
+    data_k = generate_data_set_and_k_point(10,10,3)
+    x = [1,2,3,4,5,7,8,8,5,8,11,4,2] ; y = [1,2,2,7,8,5,6,9,9,5,2,8,6]
+    k_x = data_k[0] ; k_y = data_k[1]
 
-repetead_points = 0 ; last_points = [[]]
-new_k_points = []; certain = 5
-while repetead_points <= certain:
 
-    if repetead_points == certain:
-        new_k_points = compare_k(kx_ky,x_y,True)
-    else: 
-        new_k_points = compare_k(kx_ky,x_y,False)
-        new_k_x_y = new_k_points[0]
+    x_y = [(1,1),(2,2),(3,2),(4,7),(5,8),(7,5),(8,6),(8,9),(5,9),(8,5),(11,2),(4,8),(2,6)]
+    # kx_ky = [(2,4),(4,9),(10,4)]
+    kx_ky = data_k[2]
 
-    if new_k_points[0] == last_points[0]:
-        repetead_points += 1
+    data = [x,y,x_y,k_x,k_y,kx_ky]
 
-    last_points = []
-    last_points.append(new_k_points[0])
+    repetead_points = 0 ; last_points = [[]]
+    new_k_points = []; certain = 5
+    while repetead_points <= certain:
+
+        if repetead_points == certain:
+            new_k_points = compare_k(kx_ky,x_y,True)
+        else: 
+            new_k_points = compare_k(kx_ky,x_y,False)
+            kx_ky = new_k_points[0]
+
+        if new_k_points[0] == last_points[0]:
+            repetead_points += 1
+
+        last_points = []
+        last_points.append(new_k_points[0])
 
 
 
