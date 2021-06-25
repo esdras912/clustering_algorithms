@@ -51,7 +51,7 @@ def graph(data_set):
     source_k = ColumnDataSource(k_data)
 
     graph.circle(x = 'x', y = 'y', size = 10, color = "Blue", source = source)
-    graph.circle(x = 'x', y = 'y', size = 15, color = "Red", source = source_k)
+    graph.circle(x = 'x', y = 'y', size = 0, color = "Red", source = source_k)
 
     show(graph)
 
@@ -156,8 +156,15 @@ def compare_k(k_points,points,ready_to_graph):
             break
         
         if P_iter_cluster == len(k_point_clustered[str(k_iter_cluster)]):
+            try:   
+                key_for_point = mean_points[str(k_iter_cluster)][P_in_iter]
+            except IndexError:
+                sum_for_mean_x = 0; sum_for_mean_y = 0
+                getted_means_values = False ; k_iter_cluster = 0; P_iter_cluster = 0; P_in_iter = 0
+                mean_points = {}; radius_for_new_k_points = []
+                for k_point_key_generor in range(len(k_point_clustered)):
+                    mean_points[str(k_point_key_generor)] = []
 
-            key_for_point = mean_points[str(k_iter_cluster)][P_in_iter]
             coordenade_x = points[key_for_point][0]
             coordenade_y = points[key_for_point][1]
             
@@ -226,38 +233,57 @@ def compare_k(k_points,points,ready_to_graph):
     return new_k_points,radius_for_new_k_points
 
 
+data_k = generate_data_set_and_k_point(10,40,5)
+# x = [1,2,3,4,5,7,8,8,5,8,11,4,2] ; y = [1,2,2,7,8,5,6,9,9,5,2,8,6]
+x = [0, 35, 3, 20, 7, 2, 9, 36, 28, 11, 6, 17, 22, 6, 39, 20, 18, 7, 18, 19]
+y = [5, 6, 24, 0, 8, 20, 25, 25, 14, 21, 2, 10, 5, 29, 15, 31, 20, 33, 8, 25]
+
+k_x = data_k[0] ; k_y = data_k[1]
 
 
-# graph(data)
-for _ in range(10):
-        
-    data_k = generate_data_set_and_k_point(10,10,3)
-    x = [1,2,3,4,5,7,8,8,5,8,11,4,2] ; y = [1,2,2,7,8,5,6,9,9,5,2,8,6]
-    k_x = data_k[0] ; k_y = data_k[1]
+# x_y = [(1,1),(2,2),(3,2),(4,7),(5,8),(7,5),(8,6),(8,9),(5,9),(8,5),(11,2),(4,8),(2,6)]
+x_y = [(0, 5), (35, 6), (3, 24), (20, 0), (7, 8), (2, 20), (9, 25), (36, 25), (28, 14), (11, 21), (6, 2), (17, 10), (22, 5), (6, 29), (39, 15), (20, 31), (18, 20), (7, 33), (18, 8), (19, 25)]
 
-
-    x_y = [(1,1),(2,2),(3,2),(4,7),(5,8),(7,5),(8,6),(8,9),(5,9),(8,5),(11,2),(4,8),(2,6)]
     # kx_ky = [(2,4),(4,9),(10,4)]
-    kx_ky = data_k[2]
+kx_ky = data_k[2]
 
-    data = [x,y,x_y,k_x,k_y,kx_ky]
+data = [x,y,x_y,k_x,k_y,kx_ky]
 
-    repetead_points = 0 ; last_points = [[]]
-    new_k_points = []; certain = 5
-    while repetead_points <= certain:
 
-        if repetead_points == certain:
-            new_k_points = compare_k(kx_ky,x_y,True)
-        else: 
-            new_k_points = compare_k(kx_ky,x_y,False)
-            kx_ky = new_k_points[0]
 
-        if new_k_points[0] == last_points[0]:
-            repetead_points += 1
+graph(data)
+        
+data_k = generate_data_set_and_k_point(10,40,5)
+# x = [1,2,3,4,5,7,8,8,5,8,11,4,2] ; y = [1,2,2,7,8,5,6,9,9,5,2,8,6]
+x = [0, 35, 3, 20, 7, 2, 9, 36, 28, 11, 6, 17, 22, 6, 39, 20, 18, 7, 18, 19]
+y = [5, 6, 24, 0, 8, 20, 25, 25, 14, 21, 2, 10, 5, 29, 15, 31, 20, 33, 8, 25]
 
-        last_points = []
-        last_points.append(new_k_points[0])
+k_x = data_k[0] ; k_y = data_k[1]
 
+
+# x_y = [(1,1),(2,2),(3,2),(4,7),(5,8),(7,5),(8,6),(8,9),(5,9),(8,5),(11,2),(4,8),(2,6)]
+x_y = [(0, 5), (35, 6), (3, 24), (20, 0), (7, 8), (2, 20), (9, 25), (36, 25), (28, 14), (11, 21), (6, 2), (17, 10), (22, 5), (6, 29), (39, 15), (20, 31), (18, 20), (7, 33), (18, 8), (19, 25)]
+
+# kx_ky = [(2,4),(4,9),(10,4)]
+kx_ky = data_k[2]
+
+data = [x,y,x_y,k_x,k_y,kx_ky]
+
+repetead_points = 0 ; last_points = [[]]
+new_k_points = []; certain = 5
+while repetead_points <= certain:
+
+    if repetead_points == certain:
+        new_k_points = compare_k(kx_ky,x_y,True)
+    else: 
+        new_k_points = compare_k(kx_ky,x_y,False)
+        kx_ky = new_k_points[0]
+
+    if new_k_points[0] == last_points[0]:
+        repetead_points += 1
+
+    last_points = []
+    last_points.append(new_k_points[0])
 
 
 points_to_graph = extract_data_points_for_graph(new_k_points[0])
