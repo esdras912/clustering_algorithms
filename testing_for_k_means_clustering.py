@@ -71,11 +71,11 @@ def graph_2(data_set):
     show(graph)
 
 
-def compare_k(k_points,points,stop_counter = 0):
+def compare_k(k_points,points):
 
     
 
-    idk = 0; idp = 0; k_sets = {} ;distances_full = [];stop_counter_in = stop_counter
+    idk = 0; idp = 0; k_sets = {} ;distances_full = []
     clustering_finished = False; k_limit = len(k_points); p_limit = len(points)
     cluster_iter_k = 0; cluster_iter_p = 0; k_groups = {}
 
@@ -129,70 +129,56 @@ def compare_k(k_points,points,stop_counter = 0):
     
         
     
-    min_max_points = {}; radius_for_new_k_points = []
+    mean_points = {}; radius_for_new_k_points = []
     for k_point_key_generor in range(len(k_point_clustered)):
-        min_max_points[str(k_point_key_generor)] = []
+        mean_points[str(k_point_key_generor)] = []
 
 
-
-    getted_min_max_vals = False ; k_iter_cluster = 0; P_iter_cluster = 0
-    while getted_min_max_vals == False:
-
-        # if len(k_point_clustered[str(k_iter_cluster)]) == P_iter_cluster:
-
-        #     min_val_cluster_k =  min(min_max_points[str(k_iter_cluster)])
-        #     key_min_val_cluster_k = min_max_points[str(k_iter_cluster)].index(min_val_cluster_k)
-
-        #     max_val_cluster_k =  max(min_max_points[str(k_iter_cluster)])
-        #     key_max_val_cluster_k = min_max_points[str(k_iter_cluster)].index(max_val_cluster_k)
-
-        #     key_min_for_coordenades = k_point_clustered[str(k_iter_cluster)][key_min_val_cluster_k][0]
-        #     key_max_for_coordenades = k_point_clustered[str(k_iter_cluster)][key_max_val_cluster_k][0]
-
-        #     min_point = points[key_min_for_coordenades]; max_point = points[key_max_for_coordenades]
-        #     x_min = min_point[0]; y_min = min_point[1]
-        #     x_max = max_point[0]; y_max = max_point[1]
-        #     mean_x = (x_min + x_max) / 2;  mean_y = (y_min + y_max) / 2
-        #     distance = math.sqrt((x_max -x_min)**2 + (y_max - y_min)**2)
-        #     radius_graph = (distance / 2)
-        #     new_k_point = (mean_x,mean_y)
-        #     radius_for_new_k_points.append(radius_graph)
-
-        #     min_max_points[str(k_iter_cluster)] = 0
-        #     # min_max_points[str(k_iter_cluster)].append((min_val_cluster_k,key_min_val_cluster_k))
-        #     # min_max_points[str(k_iter_cluster)].append((max_val_cluster_k,key_max_val_cluster_k))
-        #     min_max_points[str(k_iter_cluster)] = new_k_point
-            
-        #     if k_iter_cluster < len(k_point_clustered):
-        #         k_iter_cluster += 1; P_iter_cluster = 0
-            
-        #     if k_iter_cluster == len(k_point_clustered):
-        #         P_iter_cluster = 0; k_iter_cluster = 0
-        #         getted_min_max_vals = True
-        #         break
+    sum_for_mean_x = 0; sum_for_mean_y = 0
+    getted_means_values = False ; k_iter_cluster = 0; P_iter_cluster = 0; P_in_iter = 0
+    while getted_means_values == False:
+        if k_iter_cluster == len(mean_points):
+            break
         
-        # val = k_point_clustered[str(k_iter_cluster)][P_iter_cluster][1]  in case of need access to distance at k point clustered l115
-        val = k_point_clustered[str(k_iter_cluster)][P_iter_cluster]
-        min_max_points[str(k_iter_cluster)].append(val)
-        P_iter_cluster += 1
+        if P_iter_cluster == len(k_point_clustered[str(k_iter_cluster)]):
+
+            key_for_point = mean_points[str(k_iter_cluster)][P_in_iter]
+            coordenade_x = points[key_for_point][0]
+            coordenade_y = points[key_for_point][1]
+            
+            sum_for_mean_x += coordenade_x
+            sum_for_mean_y += coordenade_y
+            
+            if P_in_iter+1 == len(k_point_clustered[str(k_iter_cluster)]):
+                mean_for_x = round(sum_for_mean_x / len(k_point_clustered[str(k_iter_cluster)]),2)
+                mean_for_y = round(sum_for_mean_y / len(k_point_clustered[str(k_iter_cluster)]),2)
+                mean_points[str(k_iter_cluster)] = (mean_for_x,mean_for_y)
+                k_iter_cluster += 1; P_iter_cluster = 0; P_in_iter = 0
+                sum_for_mean_x = 0; sum_for_mean_y = 0
+
+            else:
+                P_in_iter += 1 
+                    
+        else: 
+            val = k_point_clustered[str(k_iter_cluster)][P_iter_cluster]
+            mean_points[str(k_iter_cluster)].append(val)
+            P_iter_cluster += 1             
 
        
-    new_k_points = list(min_max_points.values())
+    new_k_points = list(mean_points.values())
 
-    if k_points == new_k_points:
-        stop_counter_in += 1
-        stop_counter = stop_counter_in
+ 
 
     return new_k_points,radius_for_new_k_points
 
     
 
     
-x = [1,2,3,4,5,7,8,8] ; y = [1,2,2,7,8,5,6,9]
+x = [1,2,3,4,5,7,8,8,5] ; y = [1,2,2,7,8,5,6,9,2]
 k_x = [2,4,10] ; k_y = [4,9,4]
 
 
-x_y = [(1,1),(2,2),(3,2),(4,7),(5,8),(7,5),(8,6),(8,9)]
+x_y = [(1,1),(2,2),(3,2),(4,7),(5,8),(7,5),(8,6),(8,9),(5,2)]
 kx_ky = [(2,4),(4,9),(10,4)]
 data = [x,y,x_y,k_x,k_y,kx_ky]
 
