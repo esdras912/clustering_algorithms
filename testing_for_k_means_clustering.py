@@ -70,10 +70,23 @@ def graph_2(data_set):
 
     show(graph)
 
+def random_color_generator():
+    data = []; return_data = []
+    with open("./colors.txt","r", encoding="utf-8") as f:
+        
+        for x in f:
+            data.append(str(x))
+        
+        for clean in data:
+            return_data.append(clean[0:-1])
+   
+    color = return_data[random.randint(0,len(return_data))]
+    return color[1::]
 
-def compare_k(k_points,points):
 
-    
+
+
+def compare_k(k_points,points,ready_to_graph):
 
     idk = 0; idp = 0; k_sets = {} ;distances_full = []
     clustering_finished = False; k_limit = len(k_points); p_limit = len(points)
@@ -136,8 +149,10 @@ def compare_k(k_points,points):
 
     sum_for_mean_x = 0; sum_for_mean_y = 0
     getted_means_values = False ; k_iter_cluster = 0; P_iter_cluster = 0; P_in_iter = 0
+
     while getted_means_values == False:
         if k_iter_cluster == len(mean_points):
+            getted_means_values = True
             break
         
         if P_iter_cluster == len(k_point_clustered[str(k_iter_cluster)]):
@@ -153,6 +168,7 @@ def compare_k(k_points,points):
                 mean_for_x = round(sum_for_mean_x / len(k_point_clustered[str(k_iter_cluster)]),2)
                 mean_for_y = round(sum_for_mean_y / len(k_point_clustered[str(k_iter_cluster)]),2)
                 mean_points[str(k_iter_cluster)] = (mean_for_x,mean_for_y)
+
                 k_iter_cluster += 1; P_iter_cluster = 0; P_in_iter = 0
                 sum_for_mean_x = 0; sum_for_mean_y = 0
 
@@ -167,18 +183,56 @@ def compare_k(k_points,points):
        
     new_k_points = list(mean_points.values())
 
- 
+    graphed_all_points = False ; iter_for_k_point = 0; iter_for_points_in_k = 0
+
+#------------------------------------------------------------------------------------------
+    output_file('K_means.html')
+    curdoc().theme = 'dark_minimal'
+    canvas = figure(plot_width=800, plot_height=800)
+#------------------------------------------------------------------------------------------   
+    while graphed_all_points == False:
+
+        if iter_for_k_point == len(k_point_clustered):
+
+            if ready_to_graph == True: 
+               show(canvas); graphed_all_points = True
+               break
+
+            else: 
+                graphed_all_points = True; break
+
+        if iter_for_points_in_k  == len(k_point_clustered[str(iter_for_k_point)]):
+            iter_for_k_point += 1; iter_for_points_in_k = 0
+
+        else:
+            key_for_coordendes_point = k_point_clustered[str(iter_for_k_point)][iter_for_points_in_k]
+            x_k_point = mean_points[str(iter_for_k_point)][0]
+            y_k_point = mean_points[str(iter_for_k_point)][1]
+
+            actual_point_x = points[key_for_coordendes_point][0] 
+            actual_point_y = points[key_for_coordendes_point][1] 
+
+            
+            x_vals = [x_k_point,actual_point_x]
+            y_vals = [y_k_point,actual_point_y]
+
+            canvas.circle([actual_point_x],[actual_point_y], size = 10, color = "Green")
+            canvas.circle([x_k_point],[y_k_point], radius = 0.2, color = "Red",alpha = 0.5)
+            canvas.line(x_vals,y_vals, color = "white", dash = "dashed")
+
+            iter_for_points_in_k += 1
+
 
     return new_k_points,radius_for_new_k_points
 
     
 
     
-x = [1,2,3,4,5,7,8,8,5] ; y = [1,2,2,7,8,5,6,9,2]
+x = [1,2,3,4,5,7,8,8] ; y = [1,2,2,7,8,5,6,9]
 k_x = [2,4,10] ; k_y = [4,9,4]
 
 
-x_y = [(1,1),(2,2),(3,2),(4,7),(5,8),(7,5),(8,6),(8,9),(5,2)]
+x_y = [(1,1),(2,2),(3,2),(4,7),(5,8),(7,5),(8,6),(8,9),(5,9),(8,5),(11,2),(4,8),(2,6)]
 kx_ky = [(2,4),(4,9),(10,4)]
 data = [x,y,x_y,k_x,k_y,kx_ky]
 
@@ -186,10 +240,15 @@ data = [x,y,x_y,k_x,k_y,kx_ky]
 
 
 repetead_points = 0 ; last_points = [[]]
-new_k_points = []
-while repetead_points <= 3:
-    new_k_points = compare_k(kx_ky,x_y)
-    new_k_x_y = new_k_points[0]
+new_k_points = []; certain = 5
+while repetead_points <= certain:
+
+    if repetead_points == certain:
+        new_k_points = compare_k(kx_ky,x_y,True)
+    else: 
+        new_k_points = compare_k(kx_ky,x_y,False)
+        new_k_x_y = new_k_points[0]
+
     if new_k_points[0] == last_points[0]:
         repetead_points += 1
 
@@ -202,10 +261,10 @@ points_to_graph = extract_data_points_for_graph(new_k_points[0])
 
 new_data = [x,y,x_y,points_to_graph[0],points_to_graph[1],new_k_points]
 
-graph(data)
-next = input("Next: ")
-if next == "Y" or next == "y":
-    graph_2(new_data)
+# graph(data)
+# next = input("Next: ")
+# if next == "Y" or next == "y":
+#     graph_2(new_data)
 
 
 
